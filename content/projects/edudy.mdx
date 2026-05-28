@@ -30,13 +30,13 @@ repos:
 
 ![강의 상세 페이지](/projects/edudy/course.jpg)
 
-![관리자 대시보드](/projects/edudy/admin.jpg)
-
 - **QR 출결**: QR 코드 스캔 기반 출결 체크 + 스케줄러 자동 결석 처리
 - **SMS 발송**: Solapi SDK 연동, 공휴일 API로 수업일 자동 제외
 - **JWT 인증**: Access/Refresh 토큰 기반, 역할(STUDENT/INSTRUCTOR/MANAGER/ADMIN) 분리
 
-## ERD
+![관리자 대시보드](/projects/edudy/admin.jpg)
+
+## DB 구조
 
 ![ERD](/projects/edudy/erd.jpg)
 
@@ -76,4 +76,14 @@ repos:
 
 ## 트러블슈팅
 
-_(작성 예정)_
+### 공공 API XML 매핑 오류
+
+공공데이터포털 공휴일 API 응답이 XML 형식인데, Java 11부터 JAXB가 JDK에서 제거되면서 XML DTO 매핑이 실패했습니다. build.gradle에 JAXB 의존성 2개(`jakarta.xml.bind-api`, `jaxb-runtime`)를 추가해 해결했고, 공휴일 데이터를 DB에 저장해 출결 스케줄러에서 수업일 계산에 활용했습니다.
+
+### SPA 라우팅 새로고침 404
+
+React SPA를 Vercel에 배포 후 직접 URL 접근이나 새로고침 시 404가 발생했습니다. Vercel은 기본적으로 정적 파일만 서빙하기 때문에 클라이언트 라우팅 경로를 모릅니다. `vercel.json`에 모든 경로를 `index.html`로 rewrite하는 규칙을 추가해 해결했습니다.
+
+### CORS 설정
+
+React(Vercel, `edudy.wonjae.cloud`)에서 Spring Boot API(`api.edudy.wonjae.cloud`)를 호출할 때 CORS 오류가 발생했습니다. 로컬에서는 동일 출처라 문제없었으나 배포 환경에서는 도메인이 달라 차단됐습니다. Spring Security 설정에서 허용 출처와 메서드를 명시해 해결했습니다.
