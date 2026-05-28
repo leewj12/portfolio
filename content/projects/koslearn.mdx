@@ -1,11 +1,11 @@
 ---
 order: 2
 name: KosLearn
-tagline: 온라인 강의 플랫폼
-tech: [Spring, MySQL, Thymeleaf, Docker]
+tagline: 강의 구매·수강·관리 기능을 갖춘 LMS 플랫폼
+tech: [Java, Spring Boot, MyBatis, Thymeleaf, Spring Security, MySQL, Portone, Docker, AWS EC2]
 demo: https://koslearn.wonjae.cloud
-period: 팀 프로젝트 2
-role: 프론트엔드 · 백엔드 일부 · 배포
+period: 팀 프로젝트 2 · 2024.11 ~ 2024.12
+role: 프론트엔드 전반 · 회원관리 백엔드 · 배포
 repos:
   - label: GitHub
     url: https://github.com/leewj12/koslearn
@@ -13,31 +13,50 @@ repos:
 
 ## 개요
 
-강의 수강·결제·관리 기능을 갖춘 온라인 러닝 플랫폼입니다. Spring Boot 기반
-서버사이드 렌더링으로 구현했습니다. _(작성 예정 — 직접 채워 넣으세요)_
+수강생·강사·관리자 3개 역할로 구성된 온라인 강의 판매 플랫폼입니다. 강의 검색부터 결제(Portone), 수강까지 전 과정을 구현했으며, Spring Boot + MyBatis + Thymeleaf 스택으로 MVC 구조를 갖추고 Docker + GitHub Actions CI/CD로 AWS EC2에 배포·운영 중입니다.
 
-## 기획 배경
-
-_(작성 예정)_ 서비스 목표와 주요 사용자 흐름을 적습니다.
+![메인 페이지](/projects/koslearn/main.jpg)
 
 ## 주요 기능
 
-- _(작성 예정)_ 강의/수강/결제 도메인
-- _(작성 예정)_ 담당한 화면 및 기능
-- _(작성 예정)_ Docker 기반 배포
+| 역할 | 기능 |
+|------|------|
+| 수강생 | 강의 검색·카테고리 필터, 장바구니, 결제(Portone), 수강 페이지, 리뷰 |
+| 강사 | 강의 등록(이미지·첨부자료 업로드), 강사 프로필 관리 |
+| 관리자 | 회원·강의·결제 내역 조회 및 관리, 공지사항 등록 |
+| 공통 | 회원가입/로그인, 이메일 인증 비밀번호 재설정, 커뮤니티 게시판 |
 
-## ERD
+![강의 상세 페이지](/projects/koslearn/course.jpg)
 
-_(작성 예정)_ ERD 이미지를 `public/projects/koslearn/erd.png`에 넣고
-`![ERD](/projects/koslearn/erd.png)` 형식으로 삽입하면 됩니다.
+## DB 구조
 
-## 일정
+![ERD](/projects/koslearn/erd.jpg)
 
-| 주차 | 작업 |
-| --- | --- |
-| 1~2주 | _(작성 예정)_ |
-| 3~4주 | _(작성 예정)_ |
+## 담당 역할
 
-## 담당 · 트러블슈팅
+**팀 프로젝트 당시**
+- 전체 Thymeleaf 프론트엔드 레이아웃 설계 및 구현
+- Spring Security 기반 회원가입·로그인·로그아웃, 이메일 인증 비밀번호 재설정 백엔드
 
-_(작성 예정)_ 맡은 역할과 해결한 문제, 배운 점을 적습니다.
+**프로젝트 이후 개선**
+- **CSS 전면 리디자인** — 분산된 스타일을 common.css 디자인 시스템으로 통합, 7,003줄 → 2,763줄로 경량화
+- **반응형 적용** — 전체 페이지 모바일 대응
+- **버그 수정 29건** — 결제 흐름, 파일 업로드, 페이징 등 주요 기능 수정
+- **Docker + CI/CD** — 멀티스테이지 Dockerfile, 볼륨 6개(업로드 파일 영속), GitHub Actions → GHCR → EC2 자동 배포
+
+## 개발 일정
+
+| 기간 | 작업 |
+|------|------|
+| 11월 1~2주 | 요구사항 분석, 기획, DB 설계 |
+| 11월 3~4주 | 기능 구현 (수강생·강사·관리자) |
+| 12월 1주 | 통합 테스트 및 버그 수정 |
+| 12월 2주 | 배포, 리팩토링, 발표 준비 |
+
+## 트러블슈팅
+
+**CSS 경량화 — 디자인 시스템 도입**
+팀원마다 CSS를 각자 작성하다 보니 중복·충돌이 누적되어 7,003줄에 달했습니다. 전체를 common.css 기준으로 재설계해 변수·컴포넌트 클래스로 통합하고 2,763줄로 줄이면서 일관된 디자인을 확보했습니다.
+
+**Docker 파일 영속성**
+컨테이너 재시작 시 업로드 파일이 사라지는 문제가 있었습니다. 강의 이미지·첨부파일·프로필 이미지 등 6개 경로를 named volume으로 분리해 해결했습니다.
