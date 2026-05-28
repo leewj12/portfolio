@@ -43,10 +43,10 @@ Next.js 기반의 개발자 포트폴리오 사이트입니다.
 
 | 프로젝트 | 설명 | 스택 | 링크 |
 |----------|------|------|------|
-| **AlterRe** | 농산물 데이터 시각화 웹 | HTML · CSS · JS · Python | [데모](https://kosmoalterre.netlify.app) · [GitHub](https://github.com/leewj12/alterre) |
-| **KosLearn** | 온라인 강의 플랫폼 | Spring · MySQL · Thymeleaf · Docker | [데모](https://koslearn.wonjae.cloud) · [GitHub](https://github.com/leewj12/koslearn) |
-| **MetaLearning** | KDT 교육 관리 플랫폼 | Spring · MySQL · React · AWS S3 | [데모](https://metalearning.wonjae.cloud) · [GitHub](https://github.com/leewj12/metalearning) |
-| **Edudy** | 교육 기관 ERP | Spring · MySQL · React · Tailwind | [데모](https://edudy.wonjae.cloud) · [Back](https://github.com/leewj12/edudy) · [Front](https://github.com/leewj12/edudy-front) |
+| **AlterRe** | 농산물 가격·기후·소비문화 데이터 시각화 | Python · pandas · matplotlib · MySQL · HTML/CSS/JS | [데모](https://kosmoalterre.netlify.app) · [GitHub](https://github.com/leewj12/alterre) |
+| **KosLearn** | 강의 구매·수강·관리 LMS 플랫폼 | Spring Boot · MyBatis · Thymeleaf · MySQL · Docker · EC2 | [데모](https://koslearn.wonjae.cloud) · [GitHub](https://github.com/leewj12/koslearn) |
+| **MetaLearning** | KDT 국비 + 온라인 강의 통합 플랫폼 | Spring Boot · JPA · React · AWS S3 · Docker · EC2 | [데모](https://metalearning.wonjae.cloud) · [GitHub](https://github.com/leewj12/metalearning) |
+| **Edudy** | 국비지원 교육기관 ERP 플랫폼 | React · Vite · Tailwind · Spring Boot · JWT · Vercel | [데모](https://edudy.wonjae.cloud) · [Back](https://github.com/leewj12/edudy) · [Front](https://github.com/leewj12/edudy-front) |
 
 ---
 
@@ -111,7 +111,7 @@ portfolio/
    본문 작성...
    ```
 
-2. 이미지는 `public/projects/<slug>/`에 넣고 `![ERD](/projects/<slug>/erd.png)`로 삽입
+2. 이미지는 `public/projects/<slug>/`에 넣고 `![ERD](/projects/<slug>/erd.jpg)`로 삽입
 3. `git push` → Vercel 자동 재배포
 
 ---
@@ -147,8 +147,7 @@ npm run start
 
 ## Vercel 배포
 
-1. [vercel.com](https://vercel.com)에서 GitHub 레포 `leewj12/portfolio` 연결
-2. Framework Preset: **Next.js** (자동 감지, 별도 설정 불필요)
-3. Deploy → `*.vercel.app` 주소 발급
-4. 커스텀 도메인: 가비아 DNS에서 apex(`@`) A 레코드를 Vercel IP로 설정 → `wonjae.cloud` 연결
-5. `main` 브랜치에 push할 때마다 자동 재배포
+[wonjae.cloud](https://wonjae.cloud)에 배포되어 운영 중입니다. GitHub `main` 브랜치에 push하면 Vercel이 자동으로 빌드·재배포합니다.
+
+- GitHub 레포 `leewj12/portfolio` ↔ Vercel 연동 (Framework Preset: **Next.js** 자동 감지, 별도 설정 불필요)
+- 커스텀 도메인: 가비아 DNS apex(`@`) A 레코드를 Vercel로 연결
