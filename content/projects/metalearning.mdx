@@ -1,11 +1,11 @@
 ---
 order: 3
 name: MetaLearning
-tagline: KDT 교육 관리 플랫폼
-tech: [Spring, MySQL, React, AWS S3]
+tagline: KDT 국비지원 + 온라인 강의 마켓플레이스 통합 플랫폼
+tech: [Java, Spring Boot, JPA, MyBatis, Thymeleaf, React, Spring Security, MySQL, AWS S3, Docker, AWS EC2]
 demo: https://metalearning.wonjae.cloud
-period: 팀 프로젝트 3
-role: 프론트엔드 · 백엔드 일부 · 배포
+period: 팀 프로젝트 3 · 2024.12 ~ 2025.01
+role: 공개 페이지 프론트엔드 전담 · 배포
 repos:
   - label: GitHub
     url: https://github.com/leewj12/metalearning
@@ -13,31 +13,51 @@ repos:
 
 ## 개요
 
-KDT 교육 과정의 학습(LMS)과 운영(CMS)을 통합 관리하는 플랫폼입니다. React로
-일부 화면을 구성하고 AWS S3로 파일을 관리했습니다. _(작성 예정 — 직접 채워 넣으세요)_
+KDT(국민내일배움카드) 국비지원 교육과정과 온라인 강의 마켓플레이스를 하나로 통합한 LMS 플랫폼입니다. 수강생·강사·매니저·관리자 4개 역할로 권한을 분리하고, Spring Boot + Thymeleaf(공개 페이지)와 React SPA(대시보드)를 혼합 구조로 구현했습니다. 5인 팀 프로젝트로 4주간 진행했습니다.
 
-## 기획 배경
-
-_(작성 예정)_ LMS/CMS 분리 배경과 운영 시나리오를 적습니다.
+![메인 페이지](/projects/metalearning/main.jpg)
 
 ## 주요 기능
 
-- _(작성 예정)_ LMS/CMS 기능 및 권한 분리
-- _(작성 예정)_ 담당한 화면 및 기능
-- _(작성 예정)_ S3 파일 업로드 / 스케줄러
+| 역할 | 기능 |
+|------|------|
+| 수강생 | KDT 과정 목록·신청, 온라인 강의 구매(장바구니·결제·환불), S3 영상 수강, 출석 확인, 테스트 응시 |
+| 강사 | 커리큘럼·영상 등록, 강의 진행 현황 대시보드 |
+| 매니저 | 출석 관리, KDT 상담 목록, 게시판 관리 |
+| 관리자 | KDT 과정·세션 등록, 테스트 출제·채점, IP 기반 출석 제어, 통계 대시보드, 회원 관리 |
 
-## ERD
+![국비지원 교육과정](/projects/metalearning/course.jpg)
 
-_(작성 예정)_ ERD 이미지를 `public/projects/metalearning/erd.png`에 넣고
-`![ERD](/projects/metalearning/erd.png)` 형식으로 삽입하면 됩니다.
+## DB 구조
 
-## 일정
+![ERD](/projects/metalearning/erd.jpg)
 
-| 주차 | 작업 |
-| --- | --- |
-| 1~2주 | _(작성 예정)_ |
-| 3~4주 | _(작성 예정)_ |
+## 담당 역할
 
-## 담당 · 트러블슈팅
+**팀 프로젝트 당시**
+- 공개 페이지 Thymeleaf 프론트엔드 전담 — 메인, 강의 목록·상세, 국비 과정 목록·상세 페이지 구현
+- 다른 팀원: React SPA 기반 관리자·매니저·강사 대시보드 담당
 
-_(작성 예정)_ 맡은 역할과 해결한 문제, 배운 점을 적습니다.
+**프로젝트 이후 단독 개선**
+- **UI 전면 리디자인** — 비로그인 공개 페이지 18개 파일 다크네이비+오렌지 팔레트로 재설계
+- **스케줄러 버그 수정** — 시작일이 미래인 세션이 ONGOING으로 잘못 변경되어 신청 버튼 미노출되던 문제 수정
+- **S3 영상 업로드 복구** — 로컬 저장 방식으로 되어있던 영상 업로드를 AWS S3로 정상화
+- **CI/CD React 빌드 누락 수정** — Actions에 React 빌드 단계 누락으로 배포 후 대시보드 404, 워크플로우 보완
+- **Docker + CI/CD** — GitHub Actions → GHCR → EC2 자동 배포 구성 (bootWar 빌드 방식)
+
+## 개발 일정
+
+| 기간 | 작업 |
+|------|------|
+| 12/23~12/29 | 요구사항 분석, 프로젝트 셋팅 |
+| 12/30~1/5 | 회원관리, 국비 관리 구현 |
+| 1/6~1/12 | 강의 관리(온라인+국비), 결제 관리 구현 |
+| 1/13~1/15 | 시스템 통합·테스트, 배포, 발표 준비 |
+
+## 트러블슈팅
+
+**스케줄러 ONGOING 버그**
+KDT 세션 상태를 주기적으로 업데이트하는 스케줄러(`updateSessionsToOngoing`)가 시작일이 미래인 세션까지 ONGOING으로 변경해 신청 버튼이 사라지는 문제가 있었습니다. 쿼리의 날짜 조건(`start_date <= now()`)이 누락되어 있었고, 조건을 추가해 해결했습니다.
+
+**CI/CD React 빌드 누락**
+GitHub Actions 배포 후 React 대시보드가 404로 표시되는 문제가 있었습니다. CI 스크립트에 `npm ci && npm run build` 단계가 빠져 있어 빌드된 정적 파일이 WAR에 포함되지 않았습니다. Actions 워크플로우에 빌드 단계를 추가해 해결했습니다.
