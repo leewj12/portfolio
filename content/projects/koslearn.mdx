@@ -28,6 +28,22 @@ repos:
 
 ![강의 상세 페이지](/projects/koslearn/course.jpg)
 
+## 서비스 아키텍처
+
+Spring Boot MVC 모놀리식 구조로, AWS EC2 한 대에서 Nginx 리버스 프록시 뒤에 운영됩니다.
+
+```
+[사용자] ──HTTPS──> AWS EC2 (t3.small · 서울)
+                    Nginx 리버스 프록시 · HTTPS
+                          │
+                          ▼
+                 Spring Boot (Thymeleaf MVC) ──> MySQL
+                          │
+                    업로드 파일 → Docker named volume ×6 (영속화)
+```
+
+**CI/CD** — main 브랜치 push → GitHub Actions (bootJar 빌드 → Docker 멀티스테이지 이미지 → push) → GHCR(`ghcr.io/leewj12/koslearn`) → EC2 pull·재기동
+
 ## DB 구조
 
 ![ERD](/projects/koslearn/erd.jpg)
@@ -59,3 +75,7 @@ repos:
 
 **Docker 파일 영속성**
 컨테이너 재시작 시 업로드 파일이 사라지는 문제가 있었습니다. 강의 이미지·첨부파일·프로필 이미지 등 6개 경로를 named volume으로 분리해 해결했습니다.
+
+## 배운 점
+
+팀 프로젝트가 끝난 뒤에도 혼자 CSS 정리·버그 29건 수정·CI/CD 구축까지 끌고 가며, '발표용으로 동작하는 코드'와 '실제로 배포되어 운영되는 서비스'는 다르다는 것을 체감했습니다. 특히 Spring Security 기반 인증·권한과 Docker 배포를 직접 다루면서, 만드는 것만큼 안정적으로 운영하는 것이 중요하다는 점을 배웠습니다.
